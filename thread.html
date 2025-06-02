@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum de l’Imperium - Sujet</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="new-thread.html">Nouveau Sujet</a>
+      <a href="search.html">Rechercher</a>
+    </div>
+    <button class="search-btn" onclick="window.location.href='search.html'">Rechercher</button>
+  </nav>
+
+  <div class="container">
+    <div class="thread-header">
+      <h1 id="thread-title">Chargement...</h1>
+      <div class="thread-meta" id="thread-meta"></div>
+    </div>
+
+    <div class="thread-content" id="thread-content"></div>
+
+    <div class="messages" id="messages">
+      <!-- Messages chargés dynamiquement -->
+    </div>
+
+    <div class="reply-form">
+      <h2>Répondre</h2>
+      <textarea id="reply-content" placeholder="Votre réponse... (HTML autorisé : p, br, strong, em, u, a, ul, ol, li, blockquote, code, pre)"></textarea>
+      <button onclick="ajouterReponse()">Poster</button>
+    </div>
+
+    <div class="footer">
+      <p>Forum de l’Imperium © 2025 - Pour l’Honneur</p>
+    </div>
+  </div>
+
+  <script src="thread.js"></script>
+</body>
+</html>

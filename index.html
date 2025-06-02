@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr" class="index">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum de l’Imperium - Accueil</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="new-thread.html">Nouveau Sujet</a>
+      <a href="search.html">Rechercher</a>
+    </div>
+    <button class="search-btn" onclick="window.location.href='search.html'">Rechercher</button>
+  </nav>
+
+  <div class="container">
+    <div class="main-content">
+      <div class="header">
+        <h1>Forum de l’Imperium</h1>
+      </div>
+
+      <div class="box">
+        <h2>Sujets Populaires</h2>
+        <div id="popular-threads">
+          <!-- Sujets populaires chargés dynamiquement -->
+        </div>
+      </div>
+
+      <div class="box">
+        <h2>Derniers Sujets</h2>
+        <div id="thread-list">
+          <!-- Sujets statiques et dynamiques chargés ici -->
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-box">
+        <h3>Bienvenue</h3>
+        <p>Rejoignez le Forum de l’Imperium pour partager tactiques et stratégies. Respectez le Codex et l’Empereur !</p>
+      </div>
+
+      <div class="sidebar-box stats-box">
+        <h3>Statistiques</h3>
+        <ul id="forum-stats">
+          <li>Sujets : <span id="stats-threads">0</span></li>
+          <li>Messages : <span id="stats-messages">0</span></li>
+          <li>Membres : <span id="stats-members">1</span></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-box">
+        <h3>Règles du Forum</h3>
+        <p>
+          - Pas d’hérésie.<br>
+          - Respectez les Frères.<br>
+          - Signalez tout contenu indigne.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Forum de l’Imperium © 2025 - Pour l’Honneur</p>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

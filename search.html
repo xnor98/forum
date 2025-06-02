@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr" class="search">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum de l’Imperium - Recherche</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="new-thread.html">Nouveau Sujet</a>
+      <a href="search.html">Rechercher</a>
+    </div>
+    <button class="search-btn" onclick="window.location.href='search.html'">Rechercher</button>
+  </nav>
+
+  <div class="container">
+    <div class="search-form">
+      <h2>Rechercher un sujet</h2>
+      <input type="text" id="search-input" placeholder="Entrez un mot-clé...">
+      <button onclick="rechercherSujets()">Rechercher</button>
+    </div>
+
+    <div class="search-results" id="search-results"></div>
+
+    <div class="footer">
+      <p>Forum de l’Imperium © 2025 - Pour l’Honneur</p>
+    </div>
+  </div>
+
+  <script src="search.js"></script>
+</body>
+</html>

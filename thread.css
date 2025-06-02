@@ -1,0 +1,201 @@
+/* CSS pour thread.html - style sombre, simple et compact */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.navbar {
+  background-color: #0d1a26;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+}
+
+.navbar a {
+  color: #b0b0b0;
+  text-decoration: none;
+  font-size: 14px;
+  margin: 0 10px;
+}
+
+.navbar a:hover {
+  color: #ffffff;
+}
+
+.navbar .search-btn {
+  background-color: #2a2a2a;
+  color: #b0b0b0;
+  padding: 6px 12px;
+  border: 1px solid #444;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.navbar .search-btn:hover {
+  background-color: #3a3a3a;
+  color: #ffffff;
+}
+
+.container {
+  max-width: 800px;
+  margin: 10px auto;
+  background-color: #222222;
+  border: 1px solid #333;
+  padding: 15px;
+}
+
+.thread-header {
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.thread-header h1 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 0 8px;
+  color: #ffffff;
+}
+
+.thread-meta {
+  font-size: 12px;
+  color: #888;
+}
+
+.thread-content {
+  font-size: 14px;
+  color: #e0e0e0;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #2a2a2a;
+  border: 1px solid #333;
+}
+
+.thread-content p, .message-content p {
+  margin: 0 0 8px;
+}
+
+.thread-content a, .message-content a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+.thread-content a:hover, .message-content a:hover {
+  color: #6ab0ff;
+}
+
+.thread-content ul, .thread-content ol, .message-content ul, .message-content ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.thread-content blockquote, .message-content blockquote {
+  border-left: 2px solid #4a90e2;
+  padding-left: 10px;
+  margin: 8px 0;
+  color: #b0b0b0;
+}
+
+.thread-content code, .message-content code {
+  background-color: #333;
+  padding: 2px 4px;
+  font-family: monospace;
+}
+
+.thread-content pre, .message-content pre {
+  background-color: #333;
+  padding: 8px;
+  overflow-x: auto;
+  font-family: monospace;
+}
+
+.messages {
+  margin-bottom: 15px;
+}
+
+.message {
+  padding: 8px;
+  border-bottom: 1px solid #333;
+}
+
+.message-meta {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.message-content {
+  font-size: 13px;
+  color: #e0e0e0;
+}
+
+.reply-form h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px;
+  color: #ffffff;
+}
+
+.reply-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  font-size: 13px;
+  box-sizing: border-box;
+  resize: vertical;
+  height: 80px;
+}
+
+.reply-form button {
+  background-color: #4a90e2;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.reply-form button:hover {
+  background-color: #3a80d2;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #333;
+  background-color: #222222;
+}
+
+@media (max-width: 600px) {
+  .container {
+    margin: 5px;
+    padding: 10px;
+  }
+
+  .thread-header h1 {
+    font-size: 16px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .navbar a {
+    margin: 3px 0;
+  }
+}
