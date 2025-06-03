@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr" class="search">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum de l’Imperium - Account</title>
+  <link rel="stylesheet" href="styles.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="new-thread.html">Nouveau Sujet</a>
+      <a href="login.html">Mon Compte</a>
+    </div>
+    <button class="search-btn" onclick="window.location.href='search.html'">Rechercher</button>
+  </nav>
+
+  <div id="main-container" class="container">
+    <h2>Mon Compte</h2>
+    <button id="logout-btn">Logout</button>
+
+    <div class="footer">
+      <p>Forum de l’Imperium © 2025 - Pour l’Honneur</p>
+    </div>
+  </div>
+
+<script>
+
+firebase.auth().onAuthStateChanged((user) => {
+  if (!user) {
+    // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+    window.location.href = "login.html";
+  } else {
+    // L'utilisateur est connecté; vous pouvez gérer l'interface utilisateur pour cela
+    console.log('Utilisateur connecté:', user);
+    // Ajoutez ici la logique pour l'utilisateur connecté si nécessaire
+  }
+});
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  firebase.auth().signOut()
+    .then(() => {
+      console.log('Déconnexion réussie');
+      // Effectuez des actions après la déconnexion, par exemple, rediriger vers la page d'accueil ou de connexion
+      window.location.href = 'index.html';
+    })
+    .catch((error) => {
+      console.error('Erreur lors de la déconnexion:', error);
+    });
+});
+</script>
+</body>
+</html>
