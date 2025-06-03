@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Forum de l’Imperium - Recherche</title>
   <link rel="stylesheet" href="styles.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -20,7 +22,7 @@
     <div class="search-form">
       <h2>Rechercher un sujet</h2>
       <input type="text" id="search-input" placeholder="Entrez un mot-clé...">
-      <button onclick="rechercherSujets()">Rechercher</button>
+      <button id="search-btn">Rechercher</button>
     </div>
 
     <div class="search-results" id="search-results"></div>
@@ -30,6 +32,64 @@
     </div>
   </div>
 
-  <script src="search.js"></script>
+
+<script>
+  // Configuration Firebase
+  const firebaseConfig = {
+		apiKey: "AIzaSyDjmrP1BwKbZf7bFD9YW2MD_06lqHnqPrQ",
+		authDomain: "forum-51d92.firebaseapp.com",
+		projectId: "forum-51d92", // Utile, mais pas strictement nécessaire pour RTDB seule
+		storageBucket: "forum-51d92.firebasestorage.app", // Pas nécessaire pour RTDB
+		messagingSenderId: "860067871039", // Pas nécessaire pour RTDB
+		appId: "1:860067871039:web:51228a907b8046e7b37b8a",
+    // Ajoutez l'URL de votre base de données Realtime Database si elle n'est pas la base de données par défaut
+        databaseURL: "https://forum-51d92-default-rtdb.europe-west1.firebasedatabase.app/" // Souvent pas nécessaire si c'est la base par défaut
+	};
+
+  // Initialiser Firebase
+  firebase.initializeApp(firebaseConfig);
+  const dbRTDB = firebase.database();
+
+  async function rechercherSujets() {
+    const query = document.getElementById('search-input').value.toLowerCase();
+    const resultsDiv = document.getElementById('search-results');
+    resultsDiv.innerHTML = '';
+
+    const topicsRef = dbRTDB.ref('topics');
+    
+    // Recherche exacte d'une valeur dans un children indexé
+    topicsRef.once('value', (snapshot) => {
+      const threads = snapshot.val();
+      const filteredThreads = [];
+
+      // Filtrer les threads basés sur le titre ou le contenu contenant le fond de recherche
+      for (const threadId in threads) {
+        const thread = threads[threadId];
+        if ((thread.title && thread.title.toLowerCase().includes(query)) || 
+            (thread.content && thread.content.toLowerCase().includes(query))) {
+          filteredThreads.push({ id: threadId, ...thread });
+        }
+      }
+
+      if (filteredThreads.length === 0) {
+        resultsDiv.innerHTML = '<p>Aucun sujet trouvé.</p>';
+        return;
+      }
+
+      filteredThreads.forEach(thread => {
+        const threadDiv = document.createElement('div');
+        threadDiv.className = 'thread';
+        threadDiv.innerHTML = `
+          <a href="thread.html?id=${thread.id}">${thread.title}</a>
+          <div class="thread-meta">Par ${thread.author}, ${new Date(thread.timestamp).toLocaleDateString()} - ${thread.replies} réponses</div>
+        `;
+        resultsDiv.appendChild(threadDiv);
+      });
+    });
+  }
+
+  // Vous pouvez relier cette fonction à un bouton de recherche clic ou un événement 'enter' dans le champ de recherche
+  document.getElementById('search-btn').addEventListener('click', rechercherSujets);
+</script>
 </body>
 </html>
