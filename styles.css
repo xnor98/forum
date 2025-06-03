@@ -374,6 +374,10 @@ body {
 
 /* Responsive design */
 @media (max-width: 600px) {
+  body {
+    overscroll-behavior: none;
+  }
+  
   .index .container {
     grid-template-columns: 1fr;
     margin: 5px;
