@@ -121,6 +121,22 @@ document.getElementById('login-form').addEventListener('submit', (e) => {
         console.error('Erreur lors de l\'inscription:', error.message);
       });
   });
+async function newUserInDb(displayName, email) {
+  const dbRTDB = firebase.database();
+  const userRef = dbRTDB.ref('users');
+  const nouveauUserRef = userRef.push(); // Crée un nouvel enfant unique sous /topics
+  const userId = nouveauUserRef.key;
+  const nouveauUserData = {
+    username: displayName,
+    email: email,
+    messages: 0,
+    posts: 0,
+    threads: {},
+  };
+
+      // Écrire les données sur la nouvelle référence unique générée par push()
+  await nouveauUserRef.set(nouveauUserData);
+}
 </script>
 </body>
 </html>
