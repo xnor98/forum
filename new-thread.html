@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Forum de l’Imperium - Nouveau Sujet</title>
   <link rel="stylesheet" href="styles.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -28,7 +30,94 @@
       <p>Forum de l’Imperium © 2025 - Pour l’Honneur</p>
     </div>
   </div>
+	<script>
+  // Ce script suppose que 'firebase' est déjà initialisé et que 'dbRTDB'
+  // est une référence à votre Realtime Database, comme dans l'exemple précédent.
+  // dbRTDB = firebase.database();
+    // Configuration Firebase
+  const firebaseConfig = {
+		apiKey: "AIzaSyDjmrP1BwKbZf7bFD9YW2MD_06lqHnqPrQ",
+		authDomain: "forum-51d92.firebaseapp.com",
+		projectId: "forum-51d92", // Utile, mais pas strictement nécessaire pour RTDB seule
+		storageBucket: "forum-51d92.firebasestorage.app", // Pas nécessaire pour RTDB
+		messagingSenderId: "860067871039", // Pas nécessaire pour RTDB
+		appId: "1:860067871039:web:51228a907b8046e7b37b8a",
+    // Ajoutez l'URL de votre base de données Realtime Database si elle n'est pas la base de données par défaut
+		databaseURL: "https://forum-51d92-default-rtdb.europe-west1.firebasedatabase.app/", // Souvent pas nécessaire si c'est la base par défaut
+	};
 
-  <script src="new-thread.js"></script>
+  // Initialiser Firebase App (en utilisant la syntaxe namespaced)
+  // Cela rend l'objet global 'firebase' disponible
+  firebase.initializeApp(firebaseConfig);
+
+  // Obtenir une référence à la Realtime Database (en utilisant la syntaxe namespaced)
+  const dbRTDB = firebase.database(); // Accède à la base de données par défaut
+
+  async function ajouterSujet() {
+    const titreInput = document.getElementById('thread-title');
+    const contenuInput = document.getElementById('thread-content');
+
+    const titre = titreInput ? titreInput.value.trim() : ''; // Utilisez .trim() pour enlever les espaces inutiles
+    const contenu = contenuInput ? contenuInput.value.trim() : '';
+
+    if (!titre || !contenu) {
+      alert('Remplissez tous les champs, Frère !');
+      return;
+    }
+
+    // Référence au nœud 'topics' dans la Realtime Database
+    // Assurez-vous que 'dbRTDB' est accessible dans ce scope (déclaré globalement ou passé en paramètre si besoin)
+    const topicsRef = dbRTDB.ref('topics'); // On veut ajouter un nouveau sujet sous '/topics'
+
+    try {
+      // Utiliser .push() pour obtenir une nouvelle référence unique pour le sujet
+      // et .set() sur cette référence pour écrire les données.
+      // .push() retourne une Promise dans les versions récentes du SDK.
+      const nouveauSujetRef = topicsRef.push(); // Crée un nouvel enfant unique sous /topics
+      const sujetId = nouveauSujetRef.key; // On peut obtenir l'ID généré si on en a besoin
+
+      // Les données à écrire pour le nouveau sujet
+      const nouveauSujetData = {
+        title: titre,
+        content: contenu,
+        // Si vous utilisez l'authentification, vous devriez obtenir l'ID de l'utilisateur connecté ici
+        // Exemple si vous avez firebase.auth() et que l'utilisateur est connecté:
+        // authorId: firebase.auth().currentUser ? firebase.auth().currentUser.uid : null,
+        // authorName: firebase.auth().currentUser ? firebase.auth().currentUser.displayName : 'Anonyme',
+        author: 'Frère Anonyme', // Utilisez un nom d'auteur par défaut ou depuis l'authentification
+        timestamp: Date.now(), // Stocker le timestamp en millisecondes (nombre)
+        replies: 0 // Initialiser le compteur de réponses
+        // Vous pouvez ajouter d'autres champs ici si nécessaire (par exemple, authorId si authentification)
+      };
+
+      // Écrire les données sur la nouvelle référence unique générée par push()
+      await nouveauSujetRef.set(nouveauSujetData); // Écrit les données et retourne une Promise
+
+      alert('Sujet posté avec succès !');
+      // Optionnel: rediriger l'utilisateur ou mettre à jour la liste des sujets localement
+      // window.location.href = 'index.html'; // Si vous voulez rediriger après le succès
+
+      // Réinitialiser les champs après l'ajout réussi (au lieu de rediriger)
+      if (titreInput) titreInput.value = '';
+      if (contenuInput) contenuInput.value = '';
+
+      // Si vous êtes sur la page d'accueil qui affiche les sujets,
+      // l'écouteur `on('value', ...)` dans la fonction `chargerSujets`
+      // devrait automatiquement mettre à jour la liste affichée !
+
+    } catch (error) {
+      console.error("Erreur lors de la création du sujet dans RTDB: ", error);
+      alert('Erreur lors de la création du sujet. Consultez la console pour plus de détails.');
+      // L'erreur pourrait être due aux règles de sécurité, par exemple.
+      if (error.code === 'PERMISSION_DENIED') {
+          console.error("Permission refusée. Vérifiez vos règles Realtime Database pour le nœud '/topics'.");
+      }
+    }
+  }
+
+  // Assurez-vous que cette fonction est appelée, par exemple, par un bouton
+  // document.getElementById('bouton-poster-sujet').addEventListener('click', ajouterSujet);
+
+</script>
 </body>
 </html>
