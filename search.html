@@ -9,8 +9,11 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="auth.js"></script>
+<script src="bg.js"></script>
+
 </head>
 <body>
+  <div class="background-container" id="backgroundContainer"></div>
   <nav class="navbar">
     <div class="nav-links">
       <a href="index.html">Accueil</a>
@@ -36,20 +39,6 @@
 
 
 <script>
-  // Configuration Firebase
-  const firebaseConfig = {
-		apiKey: "AIzaSyDjmrP1BwKbZf7bFD9YW2MD_06lqHnqPrQ",
-		authDomain: "forum-51d92.firebaseapp.com",
-		projectId: "forum-51d92", // Utile, mais pas strictement nécessaire pour RTDB seule
-		storageBucket: "forum-51d92.firebasestorage.app", // Pas nécessaire pour RTDB
-		messagingSenderId: "860067871039", // Pas nécessaire pour RTDB
-		appId: "1:860067871039:web:51228a907b8046e7b37b8a",
-    // Ajoutez l'URL de votre base de données Realtime Database si elle n'est pas la base de données par défaut
-        databaseURL: "https://forum-51d92-default-rtdb.europe-west1.firebasedatabase.app/" // Souvent pas nécessaire si c'est la base par défaut
-	};
-
-  // Initialiser Firebase
-  firebase.initializeApp(firebaseConfig);
   const dbRTDB = firebase.database();
 
   async function rechercherSujets() {

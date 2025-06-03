@@ -8,8 +8,11 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="bg.js"></script>
+
 </head>
 <body>
+    <div class="background-container" id="backgroundContainer"></div>
   <nav class="navbar">
     <div class="nav-links">
       <a href="index.html">Accueil</a>
@@ -87,21 +90,28 @@ document.getElementById('login-form').addEventListener('submit', (e) => {
 
 
 // Inscription
-document.getElementById('signup-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('signup-email').value;
-  const password = document.getElementById('signup-password').value;
+  document.getElementById('signup-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const displayName = document.getElementById('signup-displayname').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
 
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      console.log('Inscription réussie:', userCredential.user);
-      window.location.href = "account.html";
-      // Actions après inscription réussie (redirection, afficher des messages, etc.)
-    })
-    .catch((error) => {
-      console.error('Erreur lors de l’inscription:', error.message);
-    });
-});
+    auth.createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        // Mise à jour du display name
+        return user.updateProfile({
+          displayName: displayName
+        });
+      })
+      .then(() => {
+        console.log('Inscription et mise à jour du nom d\'utilisateur réussies');
+        // Rediriger ou faire autre chose après une inscription réussie
+      })
+      .catch((error) => {
+        console.error('Erreur lors de l\'inscription:', error.message);
+      });
+  });
 </script>
 </body>
 </html>
