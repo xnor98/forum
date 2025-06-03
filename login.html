@@ -22,7 +22,7 @@
     <button class="search-btn" onclick="window.location.href='search.html'">Rechercher</button>
   </nav>
 
-  <div id="main-container" class="container">
+  <div style="display: none;" id="main-container" class="container">
     <form id="login-form">
       <h2>Se connecter :</h2>
       <input type="email" id="login-email" placeholder="Email..." required>
@@ -31,7 +31,7 @@
     </form>
     <form id="signup-form">
       <h2>S'inscrire :</h2>
-      <input type="text" id="signup-username" placeholder="Username..."required>
+      <input type="text" id="signup-displayname" placeholder="Username..."required>
       <input type="email" id="signup-email" placeholder="Email..."required>
       <input type="password" id="signup-password" placeholder="Password... (at least 6 characters)" required>
       <button type="submit" id="signup-btn">Signup</button>
@@ -43,6 +43,15 @@
   </div>
 
 <script>
+// Fonction pour changer le display d'un div
+function afficherDiv() {
+  const div = document.getElementById('monDiv');
+  setTimeout(() => {
+    div.style.display = 'block'; // Change le display pour afficher le div
+  }, 200); // Attendez 1000 millisecondes (1 seconde)
+}
+afficherDiv();
+
 const firebaseConfig = {
 	apiKey: "AIzaSyDjmrP1BwKbZf7bFD9YW2MD_06lqHnqPrQ",
 	authDomain: "forum-51d92.firebaseapp.com",

@@ -24,7 +24,7 @@
   </nav>
 
   <div id="main-container" class="container">
-    <h2>Mon Compte</h2>
+    <h2 id="bonjour-msg">Mon Compte</h2>
     <button id="logout-btn">Logout</button>
 
     <div class="footer">
@@ -33,17 +33,25 @@
   </div>
 
 <script>
+// Assurez-vous que Firebase est initialisé avant ce script
+const auth = firebase.auth();
 
-firebase.auth().onAuthStateChanged((user) => {
-  if (!user) {
-    // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
-    window.location.href = "login.html";
+// Écouteur pour l'état d'authentification
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    // Utilisateur connecté, récupération du displayName
+    const displayName = user.displayName;
+    
+    // Vous pouvez insérer le displayName dans votre interface utilisateur
+    const userNameElement = document.getElementById('bonjour-msg');
+    if (userNameElement) {
+      userNameElement.textContent = `Bonjour ${displayName}`;
+    }
   } else {
-    // L'utilisateur est connecté; vous pouvez gérer l'interface utilisateur pour cela
-    console.log('Utilisateur connecté:', user);
-    // Ajoutez ici la logique pour l'utilisateur connecté si nécessaire
+    console.log('Aucun utilisateur connecté');
   }
 });
+
 
 document.getElementById('logout-btn').addEventListener('click', () => {
   firebase.auth().signOut()

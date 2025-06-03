@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < numberOfTriangles; i++) {
         let triangle = document.createElement('div');
         let size = Math.random() * 30 + 10; // Taille aléatoire entre 10px et 40px
-        let posX = Math.random() * window.innerWidth;
-        let posY = Math.random() * window.innerHeight;
+        let posX = Math.random() * (window.innerWidth - 50);
+        let posY = Math.random() * (window.innerHeight - 50);
         let borderSize = size / Math.sqrt(2);
         let rotation = Math.random() * 360; // Rotation aléatoire entre 0 et 360 degrés
 

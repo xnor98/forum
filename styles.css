@@ -5,12 +5,15 @@ body {
   padding: 0;
   color: #e0e0e0;
   font-size: 14px;
+  min-height: 100vh;
   line-height: 1.4;
+  overscroll-behavior: none;
+  background-attachment: fixed;
   background: linear-gradient(to bottom, #000000, #001f3f);
 }
 
 .background-container {
-  background: linear-gradient(to bottom, #000000, #001f3f);
+  /* background: linear-gradient(to bottom, #000000, #001f3f); */
   position: absolute;
   top: 0;
   left: 0;
@@ -24,7 +27,7 @@ body {
   width: 0;
   height: 0;
   border-style: solid;
-  border-color: #007BFF transparent transparent transparent; /* Bleu */
+  border-color: #003d7e transparent transparent transparent; /* Bleu */
   animation: float 5s ease-in-out infinite;
   opacity: 0.7;
 }
@@ -42,7 +45,7 @@ body {
 }
 
 .navbar {
-  background-color: #0d1a26;
+  background-color: rgba(0, 0, 0, 0);
   padding: 10px 15px;
   display: flex;
   justify-content: space-between;
@@ -79,9 +82,10 @@ body {
   max-width: 1000px;
   margin: 10px auto;
   padding: 15px;
-  background-color: #222222;
   border: 1px solid #333;
+  background-color: rgba(22, 22, 22, 0.6);
 }
+
 
 .index .container {
   display: grid;
@@ -95,18 +99,18 @@ body {
 
 /* Index page specific */
 .main-content {
-  background-color: #222222;
+  background-color: rgba(0, 0, 0, 0);
   border: 1px solid #333;
 }
 
 .sidebar {
-  background-color: #222222;
+  background-color: rgba(0, 0, 0, 0);
   border: 1px solid #333;
   padding: 10px;
 }
 
 .header {
-  background-color: #0d1a26;
+  background-color: rgba(16, 33, 49, 0.6);
   color: #ffffff;
   padding: 15px;
   text-align: center;
@@ -120,6 +124,7 @@ body {
 }
 
 .box {
+  background-color: rgba(0, 0, 0, 0);
   margin: 10px;
   border-bottom: 1px solid #333;
 }
@@ -205,7 +210,7 @@ body {
   color: #e0e0e0;
   margin-bottom: 15px;
   padding: 10px;
-  background-color: #2a2a2a;
+  background-color: rgba(30, 30, 30, 0.6);
   border: 1px solid #333;
 }
 
@@ -279,7 +284,7 @@ body {
   padding: 8px;
   margin-bottom: 10px;
   border: 1px solid #444;
-  background-color: #2a2a2a;
+  background-color: rgba(30, 30, 30, 0.6);
   color: #e0e0e0;
   font-size: 13px;
   box-sizing: border-box;
@@ -315,7 +320,7 @@ body {
   padding: 8px;
   margin-bottom: 10px;
   border: 1px solid #444;
-  background-color: #2a2a2a;
+  background-color: rgba(30, 30, 30, 0.6);
   color: #e0e0e0;
   font-size: 13px;
   box-sizing: border-box;
@@ -326,7 +331,7 @@ body {
   padding: 8px;
   margin-bottom: 10px;
   border: 1px solid #444;
-  background-color: #2a2a2a;
+  background-color: rgba(30, 30, 30, 0.6);
   color: #e0e0e0;
   font-size: 13px;
   box-sizing: border-box;
@@ -362,8 +367,9 @@ body {
   padding: 10px;
   font-size: 12px;
   color: #888;
-  border-top: 1px solid #333;
-  background-color: #222222;
+  border: 1px solid #333;
+  background-color: rgba(0, 0, 0, 0);
+
 }
 
 /* Responsive design */
@@ -395,6 +401,7 @@ body {
   }
 
   .navbar {
+    background-color: rgba(0, 0, 0, 0);
     flex-direction: column;
     gap: 8px;
     padding: 8px;
