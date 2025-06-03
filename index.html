@@ -95,8 +95,14 @@
 
   function chargerSujets() {
     const threadList = document.getElementById('thread-list');
+    const popuList = document.getElementById("popular-threads");
     if (!threadList) {
         console.error("Element #thread-list not found!");
+        return; // Sortir si l'élément n'est pas trouvé
+    }
+
+    if (!popuList) {
+        console.error("Element #popular-threads not found!");
         return; // Sortir si l'élément n'est pas trouvé
     }
 
@@ -104,6 +110,13 @@
     // .on('value', callback, errorCallback) est l'équivalent namespaced de onValue
     // Il se déclenche une première fois avec les données, puis à chaque modification
     topicsRef.on('value', (snapshot) => {
+      topicsRef.once('value', (snapshot) => {
+        const topics = snapshot.val();
+        const nombreTotal = topics ? Object.keys(topics).length : 0;
+
+        // Vous pouvez également mettre à jour l'interface utilisateur avec ce nombre si besoin
+        document.getElementById('stats-threads').textContent = nombreTotal;
+      });
       // snapshot est un DataSnapshot de la RTDB
 
       // Vérifiez si des données existent au chemin /topics
@@ -121,16 +134,22 @@
 
             // Adaptez ces accès ('topic.title', etc.) en fonction des noms de champs RÉELS
             // que vous utilisez dans votre Realtime Database pour chaque sujet.
-             const authorInfo = topic.authorId || 'Auteur inconnu'; // Supposons que vous stockez l'ID de l'auteur
+             const authorInfo = topic.authorId || 'Frère Anonyme'; // Supposons que vous stockez l'ID de l'auteur
              // Le timestamp en RTDB est souvent le nombre de millisecondes depuis l'époque Unix
              const topicDate = topic.timestamp ? new Date(topic.timestamp).toLocaleDateString() : 'Date inconnue';
              // Compter le nombre de messages s'ils existent sous /topics/$topicId/posts
-             const repliesCount = topic.posts ? Object.keys(topic.posts).length : 0;
+             const repliesCount = topic.replies || 0;
 
             newThread.innerHTML = `
               <a href="thread.html?id=${topicId}">${topic.title || 'Sujet sans titre'}</a>
               <div class="thread-meta">Par ${authorInfo}, ${topicDate} - ${repliesCount} réponses</div>`;
-            threadList.appendChild(newThread);
+            
+              if (repliesCount >= 10) {
+                popuList.appendChild(newThread);
+              } else {
+                threadList.appendChild(newThread);
+              }
+            
         });
 
       } else {
@@ -142,6 +161,7 @@
           console.error("Permission refusée. Vérifiez vos règles Realtime Database pour le nœud '/topics'.");
       }
     });
+
   }
 
   document.addEventListener('DOMContentLoaded', chargerSujets);
