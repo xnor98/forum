@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Forum de l’Imperium - Accueil</title>
   <link rel="stylesheet" href="styles.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -66,7 +68,84 @@
       <p>Forum de l’Imperium © 2025 - Pour l’Honneur</p>
     </div>
   </div>
+<script>
+  
 
-  <script src="index.js"></script>
+  // Configuration Firebase
+  const firebaseConfig = {
+		apiKey: "AIzaSyDjmrP1BwKbZf7bFD9YW2MD_06lqHnqPrQ",
+		authDomain: "forum-51d92.firebaseapp.com",
+		projectId: "forum-51d92", // Utile, mais pas strictement nécessaire pour RTDB seule
+		storageBucket: "forum-51d92.firebasestorage.app", // Pas nécessaire pour RTDB
+		messagingSenderId: "860067871039", // Pas nécessaire pour RTDB
+		appId: "1:860067871039:web:51228a907b8046e7b37b8a",
+    // Ajoutez l'URL de votre base de données Realtime Database si elle n'est pas la base de données par défaut
+        databaseURL: "https://forum-51d92-default-rtdb.europe-west1.firebasedatabase.app/" // Souvent pas nécessaire si c'est la base par défaut
+	};
+
+  // Initialiser Firebase App (en utilisant la syntaxe namespaced)
+  // Cela rend l'objet global 'firebase' disponible
+  firebase.initializeApp(firebaseConfig);
+
+  // Obtenir une référence à la Realtime Database (en utilisant la syntaxe namespaced)
+  const dbRTDB = firebase.database(); // Accède à la base de données par défaut
+
+  // Obtenir une référence au nœud 'topics' (ou 'sujets' si vous l'avez nommé autrement)
+  const topicsRef = dbRTDB.ref('topics'); // Crée une référence au chemin /topics
+
+  function chargerSujets() {
+    const threadList = document.getElementById('thread-list');
+    if (!threadList) {
+        console.error("Element #thread-list not found!");
+        return; // Sortir si l'élément n'est pas trouvé
+    }
+
+    // Écouter les changements sur le nœud 'topics'
+    // .on('value', callback, errorCallback) est l'équivalent namespaced de onValue
+    // Il se déclenche une première fois avec les données, puis à chaque modification
+    topicsRef.on('value', (snapshot) => {
+      // snapshot est un DataSnapshot de la RTDB
+
+      // Vérifiez si des données existent au chemin /topics
+      if (snapshot.exists()) {
+        threadList.innerHTML = ''; // Vider la liste existante
+
+        // snapshot.forEach permet d'itérer sur les enfants directs du nœud 'topics'
+        snapshot.forEach((childSnapshot) => {
+           const topicId = childSnapshot.key; // La clé du nœud enfant (l'ID unique du sujet)
+           const topic = childSnapshot.val(); // L'objet JavaScript des données de ce sujet
+
+            // Créer l'élément HTML pour ce sujet
+            const newThread = document.createElement('div');
+            newThread.className = 'thread';
+
+            // Adaptez ces accès ('topic.title', etc.) en fonction des noms de champs RÉELS
+            // que vous utilisez dans votre Realtime Database pour chaque sujet.
+             const authorInfo = topic.authorId || 'Auteur inconnu'; // Supposons que vous stockez l'ID de l'auteur
+             // Le timestamp en RTDB est souvent le nombre de millisecondes depuis l'époque Unix
+             const topicDate = topic.timestamp ? new Date(topic.timestamp).toLocaleDateString() : 'Date inconnue';
+             // Compter le nombre de messages s'ils existent sous /topics/$topicId/posts
+             const repliesCount = topic.posts ? Object.keys(topic.posts).length : 0;
+
+            newThread.innerHTML = `
+              <a href="thread.html?id=${topicId}">${topic.title || 'Sujet sans titre'}</a>
+              <div class="thread-meta">Par ${authorInfo}, ${topicDate} - ${repliesCount} réponses</div>`;
+            threadList.appendChild(newThread);
+        });
+
+      } else {
+        threadList.innerHTML = '<p>Aucun sujet n\'a encore été créé.</p>';
+      }
+    }, (error) => {
+      console.error("Erreur lors du chargement des sujets depuis RTDB: ", error);
+      if (error.code === 'PERMISSION_DENIED') {
+          console.error("Permission refusée. Vérifiez vos règles Realtime Database pour le nœud '/topics'.");
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', chargerSujets);
+</script>
+
 </body>
 </html>
