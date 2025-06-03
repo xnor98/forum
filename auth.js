@@ -16,7 +16,7 @@ firebase.initializeApp(firebaseConfig);
 firebase.auth().onAuthStateChanged((user) => {
   if (!user) {
     // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
-    window.location.href = "login.html";
+    //window.location.href = "login.html";
   } else {
     // L'utilisateur est connecté; vous pouvez gérer l'interface utilisateur pour cela
     console.log('Utilisateur connecté:', user);
