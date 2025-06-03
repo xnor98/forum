@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Forum de l’Imperium - Sujet</title>
   <link rel="stylesheet" href="styles.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -39,6 +41,136 @@
     </div>
   </div>
 
-  <script src="thread.js"></script>
+
+<script>
+  // Configuration Firebase
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "https://forum-51d92-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  // Initialiser Firebase
+  firebase.initializeApp(firebaseConfig);
+  const dbRTDB = firebase.database();
+
+  // Fonction de sanitisation HTML
+  function sanitizeHTML(html) {
+    const allowedTags = ['p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre'];
+    const parser = new DOMParser();
+    const dom = parser.parseFromString(`<!DOCTYPE html><body>${html}</body>`, 'text/html');
+    const elements = dom.body.getElementsByTagName('*');
+    for (let i = elements.length - 1; i >= 0; i--) {
+      const tag = elements[i].tagName.toLowerCase();
+      if (!allowedTags.includes(tag)) {
+        elements[i].parentNode.removeChild(elements[i]);
+      } else if (tag === 'a') {
+        const href = elements[i].getAttribute('href');
+        const newA = document.createElement('a');
+        newA.setAttribute('href', href || '#');
+        newA.innerHTML = elements[i].innerHTML;
+        elements[i].parentNode.replaceChild(newA, elements[i]);
+      }
+    }
+    Array.from(dom.body.getElementsByTagName('*')).forEach(el => {
+      const tag = el.tagName.toLowerCase();
+      if (tag === 'a') {
+        const href = el.getAttribute('href');
+        el.removeAttribute('class');
+        el.removeAttribute('style');
+        el.removeAttribute('id');
+        for (let attr of el.attributes) {
+          if (attr.name !== 'href') el.removeAttribute(attr.name);
+        }
+        if (href) el.setAttribute('href', href);
+      } else {
+        el.removeAttribute('class');
+        el.removeAttribute('style');
+        el.removeAttribute('id');
+        for (let attr of el.attributes) {
+          el.removeAttribute(attr.name);
+        }
+      }
+    });
+    return dom.body.innerHTML;
+  }
+
+  // Charger le sujet et ses messages
+  function chargerSujet() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const threadId = urlParams.get('id');
+    if (!threadId) {
+      document.getElementById('thread-title').textContent = 'Erreur : Sujet non trouvé';
+      document.getElementById('messages').innerHTML = '<p>Sujet introuvable.</p>';
+      return;
+    }
+
+    const threadRef = dbRTDB.ref('topics/' + threadId);
+    threadRef.once('value').then((snapshot) => {
+      const thread = snapshot.val();
+      if (!thread) {
+        document.getElementById('thread-title').textContent = 'Erreur : Sujet non trouvé';
+        document.getElementById('messages').innerHTML = '<p>Sujet introuvable.</p>';
+        return;
+      }
+      // Afficher le sujet
+      document.getElementById('thread-title').textContent = thread.title;
+      document.getElementById('thread-meta').textContent = `Par ${thread.author}, ${new Date(thread.timestamp).toLocaleDateString()} - ${thread.replies} réponses`;
+      document.getElementById('thread-content').innerHTML = sanitizeHTML(thread.content);
+
+      // Afficher les messages
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.innerHTML = '';
+      if (!thread.messages || Object.keys(thread.messages).length === 0) {
+        messagesDiv.innerHTML = '<p>Aucune réponse pour le moment.</p>';
+      } else {
+        Object.values(thread.messages).forEach(message => {
+          const messageDiv = document.createElement('div');
+          messageDiv.className = 'message';
+          messageDiv.innerHTML = `
+            <div class="message-meta">Par ${message.author}, ${new Date(message.date).toLocaleDateString()}</div>
+            <div class="message-content">${sanitizeHTML(message.content)}</div>
+          `;
+          messagesDiv.appendChild(messageDiv);
+        });
+      }
+    });
+  }
+
+  // Ajouter une réponse
+  function ajouterReponse() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const threadId = urlParams.get('id');
+    const content = document.getElementById('reply-content').value;
+    if (!content) {
+      alert('Veuillez entrer un message, Frère de Bataille !');
+      return;
+    }
+
+    const threadRef = dbRTDB.ref('topics/' + threadId);
+    const messagesRef = threadRef.child('messages');
+    
+    messagesRef.push({
+      author: 'Frère Anonyme',
+      date: new Date().toISOString(),
+      content: content
+    }, (error) => {
+      if (error) {
+        console.error("Erreur lors de la création de la réponse: ", error);
+      } else {
+        threadRef.child('replies').transaction(replies => (replies || 0) + 1);
+        document.getElementById('reply-content').value = '';
+        chargerSujet();
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', chargerSujet);
+</script>
+
 </body>
 </html>
